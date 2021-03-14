@@ -43,30 +43,22 @@ defmodule GenReport do
          "hours_per_year" => hours_per_year
        }) do
     all_hours = Map.put(all_hours, name, all_hours[name] + hours)
-
-    hours_per_month =
-      Map.put(
-        hours_per_month,
-        name,
-        Map.put(
-          hours_per_month[name],
-          month,
-          hours_per_month[name][month] + hours
-        )
-      )
-
-    hours_per_year =
-      Map.put(
-        hours_per_year,
-        name,
-        Map.put(hours_per_year[name], year, hours_per_year[name][year] + hours)
-      )
+    hours_per_month = sum_values(hours_per_month, name, month, hours)
+    hours_per_year = sum_values(hours_per_year, name, year, hours)
 
     %{
       "all_hours" => all_hours,
       "hours_per_month" => hours_per_month,
       "hours_per_year" => hours_per_year
     }
+  end
+
+  defp sum_values(map, name, date, hours) do
+    Map.put(
+      map,
+      name,
+      Map.put(map[name], date, map[name][date] + hours)
+    )
   end
 
   defp hours_acc do
